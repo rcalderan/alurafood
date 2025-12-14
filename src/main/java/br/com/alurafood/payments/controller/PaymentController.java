@@ -7,6 +7,7 @@ import br.com.alurafood.payments.service.PaymentService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -58,5 +59,10 @@ public class PaymentController {
     public ResponseEntity<PaymentDto> deletePayment(@PathVariable @NotNull Long id){
         paymentService.deletePayment(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/port")
+    public String getPort(@Value("${local.server.port}") String port){
+        return String.format("Response at port %s", port);
     }
 }
