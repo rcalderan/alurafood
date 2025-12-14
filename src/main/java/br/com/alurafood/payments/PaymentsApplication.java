@@ -10,4 +10,8 @@ public class PaymentsApplication {
 		SpringApplication.run(PaymentsApplication.class, args);
 	}
 
+	@org.springframework.context.annotation.Bean
+	public org.modelmapper.ModelMapper modelMapper() {
+		return new org.modelmapper.ModelMapper();
+	}
 }

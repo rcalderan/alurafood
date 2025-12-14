@@ -1,16 +1,24 @@
 package br.com.alurafood.payments.model;
 
+import br.com.alurafood.payments.dto.CreatePaymentDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.ZoneOffset;
 
 @Entity
 @Table(name = "payments")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class Payment {
 
     @Id
@@ -19,6 +27,7 @@ public class Payment {
 
     @NotNull
     @Positive
+    @Setter
     private BigDecimal value;
 
     @NotBlank
@@ -31,6 +40,7 @@ public class Payment {
 
     @NotBlank
     @Size(max = 7)
+    @Setter
     private String expiration;
 
     @NotBlank
@@ -39,12 +49,26 @@ public class Payment {
 
     @NotNull
     @Enumerated(EnumType.STRING)
+    @Setter
     private Status status;
 
     @NotNull
+    @Setter
     private Long period;
 
     @NotNull
     private Long paymentType;
+
+    public Payment(CreatePaymentDto dto){
+        this.value = dto.value();
+        this.name = dto.name();
+        this.number = dto.number();
+        this.code = dto.code();
+        this.paymentType = dto.paymentType();
+
+        this.status = Status.CREATED;
+        this.period = 3L;
+        this.expiration = LocalDateTime.now().plusMinutes(5L).toInstant(ZoneOffset.of("-3")).toString();
+    }
 
 }
