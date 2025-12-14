@@ -9,7 +9,6 @@ import br.com.alurafood.payments.repository.PaymentRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,9 +19,6 @@ import org.springframework.stereotype.Service;
 public class PaymentService {
     @Autowired
     private PaymentRepository repository;
-
-    @Autowired
-    private ModelMapper modelMapper;
 
     public Page<PaymentDto> getAll(Pageable pageable) {
         return repository.findAll(pageable)
