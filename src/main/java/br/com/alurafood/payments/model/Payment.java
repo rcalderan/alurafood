@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "payments")
@@ -45,6 +46,7 @@ public class Payment {
 
     @NotBlank
     @Size(min = 3, max = 3)
+    @Setter
     private String code;
 
     @NotNull
@@ -68,7 +70,7 @@ public class Payment {
 
         this.status = Status.CREATED;
         this.period = 3L;
-        this.expiration = LocalDateTime.now().plusMinutes(5L).toInstant(ZoneOffset.of("-3")).toString();
+        this.expiration = LocalDateTime.now().plusDays(5L).format(DateTimeFormatter.ofPattern("dd/MM")).toUpperCase();
     }
 
 }

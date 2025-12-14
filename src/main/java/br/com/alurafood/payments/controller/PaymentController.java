@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/payments")
@@ -31,8 +32,9 @@ public class PaymentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PaymentDto> getPayment(@PathVariable @NotNull Long id){
-        var dto = paymentService.getById(id);
-        return ResponseEntity.ok(dto);
+        return Optional.ofNullable(paymentService.getById(id))
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping

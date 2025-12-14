@@ -12,21 +12,16 @@ public record UpdatePaymentDto(
         @NotNull
         Long id,
 
-        @NotNull
         @Positive
         BigDecimal value,
 
-        @NotBlank
         @Size(min = 3, max = 3)
         String code,
 
-        @NotNull
         Status status,
 
-        @NotBlank
         @Size(max = 7)
         String expiration,
 
-        @NotNull
         Long period) {
 }
