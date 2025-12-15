@@ -82,16 +82,15 @@ public class PaymentService {
                 });
     }
 
+    @Transactional
     public void confirmOrder(Long id){
         Optional<Payment> payment = repository.findById(id);
 
-        if (!payment.isPresent()) {
-            throw new EntityNotFoundException();
+        if (payment.isPresent()) {
+            payment.get().setStatus(Status.CONFIRMED);
+            repository.save(payment.get());
+            order.updatePayment(payment.get().getPeriod());
         }
-
-        payment.get().setStatus(Status.CONFIRMED);
-        repository.save(payment.get());
-        order.updatePayment(payment.get().getPeriod());
     }
 
 }

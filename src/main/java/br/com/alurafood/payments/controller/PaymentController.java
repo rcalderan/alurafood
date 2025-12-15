@@ -4,6 +4,7 @@ import br.com.alurafood.payments.dto.CreatePaymentDto;
 import br.com.alurafood.payments.dto.PaymentDto;
 import br.com.alurafood.payments.dto.UpdatePaymentDto;
 import br.com.alurafood.payments.service.PaymentService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,8 +67,13 @@ public class PaymentController {
         return String.format("Response at port %s", port);
     }
 
+    @CircuitBreaker(name = "updateOrder", fallbackMethod = "paymentPartiallyConfirmed")
     @PatchMapping("/{id}/confirm")
     public void confirmPayment(@PathVariable @NotNull Long id){
+        paymentService.confirmOrder(id);
+    }
+
+    public void paymentPartiallyConfirmed(Long id, Exception e){
         paymentService.confirmOrder(id);
     }
 }
