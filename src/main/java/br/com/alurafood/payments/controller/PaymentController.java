@@ -65,4 +65,9 @@ public class PaymentController {
     public String getPort(@Value("${local.server.port}") String port){
         return String.format("Response at port %s", port);
     }
+
+    @PatchMapping("/{id}/confirm")
+    public void confirmPayment(@PathVariable @NotNull Long id){
+        paymentService.confirmOrder(id);
+    }
 }

@@ -3,9 +3,11 @@ package br.com.alurafood.payments.service;
 import br.com.alurafood.payments.dto.CreatePaymentDto;
 import br.com.alurafood.payments.dto.PaymentDto;
 import br.com.alurafood.payments.dto.UpdatePaymentDto;
+import br.com.alurafood.payments.http.OrderClient;
 import br.com.alurafood.payments.model.Payment;
 import br.com.alurafood.payments.model.Status;
 import br.com.alurafood.payments.repository.PaymentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -14,11 +16,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class PaymentService {
     @Autowired
     private PaymentRepository repository;
+
+
+    @Autowired
+    private OrderClient order;
+
 
     public Page<PaymentDto> getAll(Pageable pageable) {
         return repository.findAll(pageable)
@@ -71,6 +80,18 @@ public class PaymentService {
                     repository.delete(payment);
                     return true;
                 });
+    }
+
+    public void confirmOrder(Long id){
+        Optional<Payment> payment = repository.findById(id);
+
+        if (!payment.isPresent()) {
+            throw new EntityNotFoundException();
+        }
+
+        payment.get().setStatus(Status.CONFIRMED);
+        repository.save(payment.get());
+        order.updatePayment(payment.get().getPeriod());
     }
 
 }
